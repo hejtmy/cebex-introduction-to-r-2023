@@ -82,12 +82,35 @@ df_arrests$UrbanArea <- TRUE
 df_arrests$UrbanArea[df_arrests$UrbanPop < 65] <- FALSE
 
 ## Data frame practice -----
+# https://github.com/hejtmy/cebex-introduction-to-r-2023
 
 set.seed(1000)
 df_thesis <- data.frame(
   # column id (random sample out of 50)
+  id = sample(50),
   # gender ("female", "male"), random 50 values
-  # altruism_score (random normal distrubution mean = 50, sd = 10) - rnorm
+  gender = sample(c("female", "male"), 50, replace = TRUE),
+  # altruism_score (random normal distribution mean = 50, sd = 10)
+  altruism_score = rnorm(50, mean = 50, sd = 10),
   # test_results (random normal distribution mean 115, sd = 35)
-  # average time (rnorm mean = 11, sd = 3)
+  test_results = rnorm(50, mean = 115, sd = 35),
+  # test time (rnorm mean = 11, sd = 3)
+  test_time = rnorm(50, mean = 11, sd = 3)
 )
+summary(df_thesis)
+
+# test results and altruism can only be whole numbers. Round them
+
+# remove ID 15, 16 and 44 who did not consent
+# mark any test speed above 16 minutes or below 7 minutes as NA value
+# calculate standard Z-score for the test results and save to the "test_z" column
+# remove people scoring more or less then 3SD away from the mean
+# create is_outlier column (TRUE or FALSE) for people with altruism 
+#   in the top 10 or bottom 10 percent
+
+## Calculation
+# What is the average test score for men and for women
+# what is the average altruism for people finishing faster than average
+# what is the corelation between altriusm score and test results?
+
+
