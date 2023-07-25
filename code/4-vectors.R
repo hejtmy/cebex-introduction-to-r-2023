@@ -127,7 +127,7 @@ set.seed(1)
 temperatures
 temperatures_random <- sample(temperatures)
 
-### Which
+### Which ----
 which(cities == "Prague")
 i_temp_30 <- which(temperatures_random > 30)
 temperatures_random[i_temp_30]
@@ -163,3 +163,19 @@ iris$Sepal.area <- iris$Sepal.Length * iris$Sepal.Width
 # difference of Sepal length and the average sepal length
 iris$Sepal.Length.MeanDiff <- iris$Sepal.Length - mean(iris$Sepal.Length) 
 
+
+## Logical indexing -----
+
+numbers <- seq(1:10)
+numbers
+odd_values <- as.logical(numbers %% 2)
+numbers[odd_values]
+
+set.seed(2023)
+temperatures <- seq(10, 32, by = 0.2)
+temperatures <- sample(temperatures)
+
+i_above30 <- which(temperatures > 30)
+temperatures[i_above30]
+temperatures[which(temperatures > 30)]
+temperatures[temperatures > 30]
