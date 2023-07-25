@@ -82,3 +82,12 @@ df_arrests$UrbanArea <- TRUE
 df_arrests$UrbanArea[df_arrests$UrbanPop < 65] <- FALSE
 
 ## Data frame practice -----
+
+set.seed(1000)
+df_thesis <- data.frame(
+  # column id (random sample out of 50)
+  # gender ("female", "male"), random 50 values
+  # altruism_score (random normal distrubution mean = 50, sd = 10) - rnorm
+  # test_results (random normal distribution mean 115, sd = 35)
+  # average time (rnorm mean = 11, sd = 3)
+)
