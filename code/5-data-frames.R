@@ -62,8 +62,8 @@ df_arrests[df_arrests$Murder > quantile(df_arrests$Murder, probs = 0.9) |
              df_arrests$Assault > quantile(df_arrests$Assault, probs = 0.9), ]
 
 # Do you think there is more violence in cities?
-median(df_arrests[df_arrests$Murder > quantile(df_arrests$Murder, probs = 0.9) |
-             df_arrests$Assault > quantile(df_arrests$Assault, probs = 0.9), "UrbanPop"])
+median(df_arrests[df_arrests$Murder > quantile(df_arrests$Murder, probs = 0.9) | 
+                    df_arrests$Assault > quantile(df_arrests$Assault, probs = 0.9), "UrbanPop"])
 
 median(df_arrests[df_arrests$Murder < quantile(df_arrests$Murder, probs = 0.1) |
                     df_arrests$Assault < quantile(df_arrests$Assault, probs = 0.1), "UrbanPop"])
@@ -100,17 +100,60 @@ df_thesis <- data.frame(
 summary(df_thesis)
 
 # test results and altruism can only be whole numbers. Round them
+df_thesis$test_results <- round(df_thesis$test_results)
+df_thesis$altruism_score <- round(df_thesis$altruism_score)
 
 # remove ID 15, 16 and 44 who did not consent
-# mark any test speed above 16 minutes or below 7 minutes as NA value
-# calculate standard Z-score for the test results and save to the "test_z" column
+str(df_thesis[df_thesis$id != c(15, 16, 44), ])
+df_thesis <- df_thesis[df_thesis$id != 15, ]
+6 %in% 1:5
+"Anna" %in% c("Martin", "Lukas")
+df_thesis <- df_thesis[!(df_thesis$id %in% c(15, 16, 44)), ]
+
+# mark any test time above 16 minutes or below 7 minutes as NA value
+df_thesis$test_time[df_thesis$test_time < 7] <- NA
+df_thesis$test_time[df_thesis$test_time > 16] <- NA
+
+df_thesis$test_time[df_thesis$test_time < 7 |
+                      df_thesis$test_time > 16] <- NA
+
+# calculate standard Z-score for the test results and save to 
+#   the "test_z" column
+df_thesis$test_z <- (df_thesis$test_results - mean(df_thesis$test_results))/
+  sd(df_thesis$test_results)
+df_thesis$test_z_scale <- scale(df_thesis$test_results)[,1]
+
 # remove people scoring more or less then 3SD away from the mean
+df_thesis[df_thesis$test_z > -3 & df_thesis$test_z < 3, ]
+# mark outliers
+df_thesis$test_outlier <- abs(df_thesis$test_z) > 3
+# only keep not outliers
+df_thesis <- df_thesis[!df_thesis$test_outlier, ]
+
+# View(df_thesis)
 # create is_outlier column (TRUE or FALSE) for people with altruism 
 #   in the top 10 or bottom 10 percent
+top_90_altruism <- quantile(df_thesis$altruism_score, 0.9)
+bottom_10_altruism <- quantile(df_thesis$altruism_score, 0.1)
+
+df_thesis$is_outlier <- df_thesis$altruism_score > top_90_altruism | 
+  df_thesis$altruism_score < bottom_10_altruism
 
 ## Calculation
 # What is the average test score for men and for women
+mean(df_thesis$test_results[df_thesis$gender == "male"])
+mean(df_thesis[df_thesis$gender == "male", "test_results"])
+mean(df_thesis[df_thesis$gender == "female", "test_results"])
+
 # what is the average altruism for people finishing faster than average
-# what is the corelation between altriusm score and test results?
+df_thesis_withtime <- df_thesis[!is.na(df_thesis$test_time),]
+mean(df_thesis_withtime[df_thesis_withtime$test_time > mean(df_thesis_withtime$test_time), 
+  "altruism_score"])
 
+# I belive this is incorrect
+# mean(df_thesis[na.omit(df_thesis$test_time) > mean(df_thesis$test_time, na.rm = TRUE), 
+#              "altruism_score"])
+# what is the correlation between altriusm score and test results?
 
+cor(df_thesis$altruism_score, df_thesis$test_results)
+cor.test(df_thesis$altruism_score, df_thesis$test_results)
