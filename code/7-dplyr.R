@@ -1,7 +1,7 @@
 library(dplyr)
 
-df_life <- read.table("data/Life Expectancy Data.csv", sep = ",",header = TRUE,
-                      quote = "")
+df_life <- read.table("data/Life Expectancy Data.csv", 
+                      sep = ",", header = TRUE, quote = "")
 
 ## Glimpse
 glimpse(df_life)
