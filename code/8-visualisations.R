@@ -125,6 +125,26 @@ df_movies %>%
     geom_smooth(method = "lm")
   # add geom smooth
 
+## Boxplots/violin plots ----
+df_movies %>%
+  filter(vote_count > 100, !(original_language %in% c("id", "no", "zh"))) %>%
+  ggplot(aes(x = original_language, y = vote_average, 
+             fill = original_language)) + 
+    geom_boxplot()
+
+df_movies %>%
+  mutate(high_gross = revenue > 50000000) %>%
+  filter(vote_count > 100, !(original_language %in% c("id", "no", "zh"))) %>%
+  ggplot(aes(x = high_gross, y = vote_average, fill = high_gross)) + 
+  geom_violin()
+
+df_movies %>%
+  filter(vote_count > 100, !(original_language %in% c("id", "no", "zh"))) %>%
+  ggplot(aes(x = original_language, y = vote_average, fill = original_language)) + 
+  geom_violin()
+
+##
+
 summary(lm(revenue ~ vote_average, data= filter(df_movies, revenue > 0, 
                                                 vote_count > 100, revenue < 1000000000)))
 
