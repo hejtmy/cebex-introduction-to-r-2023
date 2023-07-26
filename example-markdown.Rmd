@@ -1,0 +1,85 @@
+---
+title: "example-analysis"
+author: "Lukáš 'hejtmy' Hejtmánek"
+date: '2023-07-26'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r loading}
+library(dplyr)
+library(ggplot2)
+df_salary <- read.csv("data/Salary_Data_Based_country_and_race.csv")
+## Explore the data and columns, fix any obvious problems
+```
+
+```{r processing}
+df_salary$Education.Level <- gsub(" Degree", "", df_salary$Education.Level)
+df_salary$Education.Level <- gsub("p", "P", df_salary$Education.Level)
+df_salary <- select(df_salary, -X)
+df_salary <- df_salary %>%
+  filter(!is.na(Age), !is.na(Salary), !is.na(Years.of.Experience),
+         Gender != "Other")
+df_salary <- df_salary %>%
+  mutate(salary_t = Salary/1000, 
+         age_start_work = Age - Years.of.Experience)
+```
+
+## Data summary
+```{r summary}
+summary(df_salary)
+```
+
+## Create new columns/variables
+
+# Histograms
+```{r}
+ggplot(df_salary, aes(Age)) + geom_histogram(binwidth = 1)
+```
+
+```{r}
+ggplot(df_salary, aes(Years.of.Experience)) + geom_histogram(binwidth = 1)
+```
+
+```{r}
+ggplot(df_salary, aes(salary_t)) + geom_histogram(binwidth = 10)
+```
+
+```{r}
+ggplot(df_salary, aes(salary_t, fill=Education.Level)) + geom_histogram(binwidth = 10)
+```
+
+## Males make more money
+```{r}
+ggplot(df_salary, aes(salary_t, fill=Gender)) + 
+  geom_boxplot()
+```
+
+```{r}
+t.test(salary_t ~ Gender, data = df_salary)
+```
+
+## Years of experience
+```{r}
+ggplot(df_salary, aes(Years.of.Experience, salary_t, color=Education.Level)) + 
+  geom_point() +
+  geom_smooth()
+```
+
+```{r}
+summary(lm(salary_t ~ Years.of.Experience, data = df_salary))
+```
+
+## Country of origin
+```{r}
+ggplot(df_salary, aes(Country, salary_t)) + geom_boxplot()
+```
+
+```{r}
+summary(aov(salary_t ~ Country, data = df_salary))
+```
+
+

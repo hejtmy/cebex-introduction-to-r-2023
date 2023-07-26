@@ -52,8 +52,8 @@ ggplot(df_salary, aes(Years.of.Experience)) + geom_histogram(binwidth = 1)
 ggplot(df_salary, aes(salary_t)) + geom_histogram(binwidth = 10)
 
 ggplot(df_salary, aes(salary_t, fill=Education.Level)) + geom_histogram(binwidth = 10)
+
 ## quantile
-## 
 # calculate new versions of the variable
 # high_grossing/fullfilling conditions
 
